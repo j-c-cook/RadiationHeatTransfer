@@ -80,12 +80,48 @@ def main():
     lmbdas_nm: list = [0.1, 250, 625, 1200, 2200, 2250, 2500, 1000000]  # lambda values in nanometers
     alphas: list = [0.92, 0.92, 0.92, 0.39, 0.39, 0.47, 0.47, 0.47]
     lmbdas_mm: list = [x / 10**3 for _, x in enumerate(lmbdas_nm)]  # 1000 nm = 1micrometer
-    print('first: {}\tlast: {}'.format(lmbdas_mm[0], lmbdas_mm[-1]))
+    # create a linear 1D interpolation function for the absorptivity
     f = interp1d(lmbdas_mm, alphas, kind='linear')
 
     T_sun: float = 5800
-    y = RHT.blackbody.effective_spectral(lmbdas_mm[0], lmbdas_mm[-1], T_sun, f)
-    print('The effective absorptivity: {0:.5f}'.format(y))
+    eff, wavelengths, eff_Eblambdas, Eblambdas = RHT.blackbody.effective_spectral(lmbdas_mm[0], lmbdas_mm[-1], T_sun, f)
+    print('The effective absorptivity: {0:.5f}'.format(eff))
+
+    # Plot the absorptivity function
+    fig, ax = plt.subplots()
+
+    ax.plot(lmbdas_mm, alphas, color='blue')
+
+    ax.set_ylabel(r'$\alpha$')
+    ax.set_xlabel('$\lambda$ ($\mu$m)')
+
+    ax.set_xlim([-0.2, 3])
+    ax.set_ylim([0, 1])
+
+    fig.savefig('absorptivity.pdf')
+    plt.close(fig)
+
+    # Plot the black body emissive power and the effective black body emissive power
+    fig, ax = plt.subplots()
+
+    ax.plot(wavelengths, Eblambdas, label='E$_{b \lambda}$')
+    ax.plot(wavelengths, eff_Eblambdas, '--', label=r'$\alpha \cdot$ E$_{b \lambda}$')
+
+    ax.set_xscale('log')
+    ax.set_yscale('log')
+    ax.set_ylim([10 ** -6, 10 ** 9])
+    ax.set_xlim([10**-2, 10**3])
+
+    fig.legend()
+
+    ax.grid(which='both')
+    ax.set_axisbelow(True)
+
+    ax.set_xlabel('Wavelength $\lambda$, $\mu$m')
+    ax.set_ylabel('E$_{b \lambda}$, W/m$^2 \cdot \mu$m')
+
+    fig.savefig('alpha_lambda.pdf')
+    plt.close(fig)
 
 
 if __name__ == '__main__':

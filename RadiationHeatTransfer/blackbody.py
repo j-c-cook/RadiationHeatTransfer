@@ -121,13 +121,17 @@ def effective_spectral(lmbda_1: float, lmbda_2: float, T: float, f: interp1d, st
     y_den, _ = Eb(T)
     # lambda_1 may need to be 0.1
     wavelengths: list = list(any_range(lmbda_1, lmbda_2, step))
-    alpha_Eblambdas: list = []
+    eff_Eblambdas: list = []
+    Eblambdas: list = []
     for _, lmbda in enumerate(wavelengths):
         Eblmda = Eblambda(lmbda, T)
-        alpha_Eblambdas.append(Eblmda * f(lmbda))
+        eff_Eblambdas.append(Eblmda * f(lmbda))
+        Eblambdas.append(Eblmda)
 
     # integrate over y(x) using the composite trapezoidal rule
-    y = cumtrapz(alpha_Eblambdas, wavelengths)
+    y = cumtrapz(eff_Eblambdas, wavelengths)
     y_num = y.tolist()[-1]  # take the last value as the total integral
 
-    return y_num / y_den
+    eff = y_num / y_den
+
+    return eff, wavelengths, eff_Eblambdas, Eblambdas
