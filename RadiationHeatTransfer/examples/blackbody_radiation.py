@@ -11,6 +11,8 @@ from scipy.optimize import fminbound
 from itertools import count
 from itertools import takewhile
 import matplotlib.pyplot as plt
+from scipy.integrate import cumtrapz
+from scipy.interpolate import interp1d
 
 
 def any_range(start, stop, step):
@@ -73,6 +75,17 @@ def main():
     lmbda = 1.
     print('lambda * T = {}'.format(T * lmbda))
     print('f_lambda = {0:.6}'.format(RHT.blackbody.f_lambda(lmbda, T)))
+
+    # Use the effective spectral function to find an effective value
+    lmbdas_nm: list = [0.1, 250, 625, 1200, 2200, 2250, 2500, 1000000]  # lambda values in nanometers
+    alphas: list = [0.92, 0.92, 0.92, 0.39, 0.39, 0.47, 0.47, 0.47]
+    lmbdas_mm: list = [x / 10**3 for _, x in enumerate(lmbdas_nm)]  # 1000 nm = 1micrometer
+    print('first: {}\tlast: {}'.format(lmbdas_mm[0], lmbdas_mm[-1]))
+    f = interp1d(lmbdas_mm, alphas, kind='linear')
+
+    T_sun: float = 5800
+    y = RHT.blackbody.effective_spectral(lmbdas_mm[0], lmbdas_mm[-1], T_sun, f)
+    print('The effective absorptivity: {0:.5f}'.format(y))
 
 
 if __name__ == '__main__':

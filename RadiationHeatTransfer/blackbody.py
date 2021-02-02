@@ -10,6 +10,10 @@ from math import pi, exp
 from scipy.integrate import quad
 import numpy as np
 np.warnings.filterwarnings('ignore')
+from scipy.interpolate import interp1d
+from itertools import count
+from itertools import takewhile
+from scipy.integrate import cumtrapz
 
 
 def Eblambda(lmbda: float, T: float, n: float = 1):
@@ -44,13 +48,10 @@ def Eblambda(lmbda: float, T: float, n: float = 1):
 
     numerator: float = C_1
 
-    try:
-        # Theres some floating point issues with this function at some values
-        denominator: float = lmbda**5 / n**2 * (np.exp(C_2/(n * lmbda * T))-1)
+    # Theres some floating point issues with this function at some values
+    denominator: float = lmbda**5 / n**2 * (np.exp(C_2/(n * lmbda * T))-1)
 
-        return numerator / denominator / mm_to_m
-    except:
-        return
+    return numerator / denominator / mm_to_m
 
 
 def Eb(T: float):
@@ -94,3 +95,39 @@ def f_lambda(lmbda: float, T: float):
 
     return y_num / y_den
 
+
+def effective_spectral(lmbda_1: float, lmbda_2: float, T: float, f: interp1d, step: float=.01):
+    """
+    Find the effective or average
+    Parameters
+    ----------
+    lmbda_1: float
+        The $\lambda_1$ in micrometers
+    lmbda_2: float
+        The $\lambda_2$ in micrometers
+    T: float
+        Temperature of the surface of the blackbody
+    f: interp1d
+        A 1d scipy interpolation of the $\alpha$, $\rho$, $\tau$
+
+    Returns
+    -------
+    The effective or average spectral hemispherical __
+    """
+    def any_range(start, stop, step):
+        start = type(start + step)(start)
+        return takewhile(lambda n: n < stop, count(start, step))
+
+    y_den, _ = Eb(T)
+    # lambda_1 may need to be 0.1
+    wavelengths: list = list(any_range(lmbda_1, lmbda_2, step))
+    alpha_Eblambdas: list = []
+    for _, lmbda in enumerate(wavelengths):
+        Eblmda = Eblambda(lmbda, T)
+        alpha_Eblambdas.append(Eblmda * f(lmbda))
+
+    # integrate over y(x) using the composite trapezoidal rule
+    y = cumtrapz(alpha_Eblambdas, wavelengths)
+    y_num = y.tolist()[-1]  # take the last value as the total integral
+
+    return y_num / y_den
