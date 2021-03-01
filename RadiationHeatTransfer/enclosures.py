@@ -28,7 +28,8 @@ def F_matrix(Fij: np.ndarray, eps: np.ndarray):
     #     F[:, i] = Fij[:, i] * eps_frac
     F = Fij * eps_frac
     # the diagonal (i==j) has an additional 1 / eps_i term
-    eye = np.identity(4)
+    m, n = eps.shape
+    eye = np.identity(m)
     eps_inv = 1 / eps
     eps_diag = eye * eps_inv
     F += eps_diag
