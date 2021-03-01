@@ -66,6 +66,30 @@ def Eb(T: float):
     return y, erf
 
 
+def Eb_vectorized(T: np.ndarray):
+    """
+    The Eb(T) function specifically takes in one temperature float value.
+    To make use of the function by passing a numpy array, the function must be vectorized.
+
+
+    Parameters
+    ----------
+    T: np.ndarray
+        A numpy matrix of size (m, n)
+
+    Returns
+    -------
+    The black body emissive power matrix that is the same size as the input T matrix
+    """
+
+    def call_Eb(Temp):
+        y, erf = Eb(Temp)
+        return y
+
+    _Eb = np.vectorize(call_Eb)
+    return _Eb(T)
+
+
 def Eb_0_lambda(lmbda: float, T: float):
     """
     Integrate over some wavelength band.
