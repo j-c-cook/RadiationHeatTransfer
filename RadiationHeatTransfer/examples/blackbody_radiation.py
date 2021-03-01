@@ -55,7 +55,7 @@ def main():
     ax.set_xlabel('Wavelength $\lambda$, $\mu$m')
     ax.set_ylabel('E$_{b \lambda}$, W/m$^2 \cdot \mu$m')
 
-    fig.savefig('blackbody_emissive_power.pdf')
+    fig.savefig('blackbody_emissive_power.png')
     plt.close(fig)
 
     # use the Eb function to integrate over the whole wavelength to determine the total black body emissive power
@@ -98,7 +98,7 @@ def main():
     ax.set_xlim([-0.2, 3])
     ax.set_ylim([0, 1])
 
-    fig.savefig('absorptivity.pdf')
+    fig.savefig('absorptivity.png')
     plt.close(fig)
 
     # Plot the black body emissive power and the effective black body emissive power
@@ -120,7 +120,7 @@ def main():
     ax.set_xlabel('Wavelength $\lambda$, $\mu$m')
     ax.set_ylabel('E$_{b \lambda}$, W/m$^2 \cdot \mu$m')
 
-    fig.savefig('alpha_lambda.pdf')
+    fig.savefig('alpha_lambda.png')
     plt.close(fig)
 
 
