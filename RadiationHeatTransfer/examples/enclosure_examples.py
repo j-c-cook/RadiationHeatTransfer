@@ -58,8 +58,6 @@ def main():
     print('Q: ')
     print(Q)
 
-    a = 1
-
 
 if __name__ == '__main__':
     main()

@@ -23,9 +23,6 @@ def F_matrix(Fij: np.ndarray, eps: np.ndarray):
     """
     # each position in the view factor matrix is multiplied by (eps_i - 1) / eps_i
     eps_frac = (eps - 1) / eps
-    # F = np.zeros_like(Fij)
-    # for i in range(len(Fij)):
-    #     F[:, i] = Fij[:, i] * eps_frac
     F = Fij * eps_frac
     # the diagonal (i==j) has an additional 1 / eps_i term
     m, n = eps.shape
