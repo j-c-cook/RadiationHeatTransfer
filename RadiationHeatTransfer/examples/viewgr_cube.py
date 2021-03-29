@@ -6,7 +6,7 @@ import RadiationHeatTransfer as rht
 
 def main():
     vs3file = 'cube.vs3'
-    vertices, shapes = rht.viewgr.read_vs3_file(vs3file)
+    vertices, shapes = rht.viewgr.read_vs3_file(vs3file, delimiter=' ')  # this file is space delimited
 
     print(vertices)
 

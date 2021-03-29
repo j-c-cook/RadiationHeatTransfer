@@ -18,7 +18,7 @@ from mpl_toolkits import mplot3d
 import plotly.graph_objects as go
 
 
-def read_vs3_file(path_to_vs3):
+def read_vs3_file(path_to_vs3, delimiter='\t'):
 
     file = open(path_to_vs3, 'r+')
     data = file.readlines()
@@ -38,7 +38,7 @@ def read_vs3_file(path_to_vs3):
         return current_line_data
 
     for line in data:
-        characters = line.split(' ')
+        characters = line.split(delimiter)
         # collect all of the vertices
         if characters[0] == 'V':
             current_line_data = process_line(characters)
@@ -70,7 +70,7 @@ def plot_vs3_shape(vertices, shapes):
         x = []
         y = []
         z = []
-        for i in range(len(shapes[shape])-1):
+        for i in range(len(shapes[shape])):
             v_num = shapes[shape][i]
             x_1, y_1, z_1 = vertices[v_num]
             x.append(x_1)
@@ -96,7 +96,7 @@ def i_plot_vs3_shape(vertices, shapes):
         y = []
         z = []
         names = []
-        for i in range(len(shapes[shape])-1):
+        for i in range(len(shapes[shape])):
             v_num = shapes[shape][i]
             x_1, y_1, z_1 = vertices[v_num]
             x.append(x_1)
