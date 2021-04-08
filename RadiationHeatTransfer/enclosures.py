@@ -56,3 +56,30 @@ def heat_flux(J: np.ndarray, Eb: np.ndarray, eps: np.ndarray):
     J_i = J / denomenator
     flux = Eb_i - J_i
     return flux
+
+
+def T_matrix(Fij, eps, A):
+    # Calculate the reflectivity's for convenience
+    rho = 1 - eps
+
+    T = -rho.T * A * Fij / eps.T / A.T
+
+    m, n = eps.shape
+    eye = np.identity(m)
+    eps_inv = 1 / eps
+    eps_diag = eye * eps_inv
+    T += eps_diag
+
+    return T
+
+
+def S_matrix(Fij, eps, A):
+    return Fij * A * eps.T
+
+
+def heat_flow(SS, eb):
+    Q = np.zeros_like(eb)
+    for i in range(4):
+        for j in range(4):
+            Q[i] += SS[i, j] * (eb[i] - eb[j])
+    return Q
