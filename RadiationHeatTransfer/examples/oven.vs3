@@ -1,0 +1,20 @@
+T Oven
+C encl=1 out=0 list=2 
+F 3
+!  #   x    y    z      coordinates of vertices
+V    1    0.000   0.000   0.000
+V    2    4.000   0.000   0.000
+V    3    4.000   2.000   0.000
+V    4    0.000   2.000   0.000
+V    5    0.000   0.000   1.000
+V    6    4.000   0.000   1.000
+V    7    4.000   2.000   1.000
+V    8    0.000   2.000   1.000
+!    #    v1   v2   v3   v4  base  cmb emit  name
+S    1     5    8    7    6    0    0  0.90  ceiling
+S    2     1    2    3    4    0    0  0.90  Floor
+S    3     1    5    6    2    0    0  0.90  S_wall
+S    4     4    3    7    8    0    0  0.90  N_wall
+S    5     2    6    7    3    0    0  0.90  W_wall
+S    6     1    4    8    5    0    0  0.90  Bottom
+End of data
